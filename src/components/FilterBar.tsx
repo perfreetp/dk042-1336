@@ -2,11 +2,12 @@ import { Filter, GraduationCap, Route, AlertTriangle, X } from 'lucide-react';
 import { useBusStore } from '@/store/busStore';
 import { allGrades, allRoutes } from '@/data/buses';
 import { cn } from '@/utils/format';
+import type { FilterGrade, FilterRisk } from '@/types';
 
 export default function FilterBar() {
   const { filters, setFilters } = useBusStore();
 
-  const riskOptions = [
+  const riskOptions: { value: FilterRisk; label: string; color: string }[] = [
     { value: 'all', label: '全部状态', color: 'text-slate-600' },
     { value: 'low', label: '正常', color: 'text-alert-green' },
     { value: 'medium', label: '关注', color: 'text-alert-orange' },
@@ -28,7 +29,7 @@ export default function FilterBar() {
           <GraduationCap size={16} className="text-slate-400" />
           <select
             value={filters.grade}
-            onChange={(e) => setFilters({ grade: e.target.value as any })}
+            onChange={(e) => setFilters({ grade: e.target.value as FilterGrade })}
             className="text-sm border border-slate-200 rounded-lg px-3 py-1.5 bg-white text-slate-700 focus:outline-none focus:ring-2 focus:ring-navy-500/30 focus:border-navy-500 transition-all cursor-pointer"
           >
             <option value="all">全部年级</option>
@@ -62,7 +63,7 @@ export default function FilterBar() {
             {riskOptions.map((opt) => (
               <button
                 key={opt.value}
-                onClick={() => setFilters({ risk: opt.value as any })}
+                onClick={() => setFilters({ risk: opt.value })}
                 className={cn(
                   'text-sm px-3 py-1.5 rounded-lg transition-all duration-200',
                   filters.risk === opt.value

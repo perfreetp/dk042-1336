@@ -53,3 +53,14 @@ export const getRiskLevelColor = (level: string): string => {
 export const cn = (...classes: (string | false | undefined | null)[]): string => {
   return classes.filter(Boolean).join(' ');
 };
+
+const VALID_COLORS = new Set([
+  '#E63946', '#2A9D8F', '#F4A261', '#264653', '#8338EC',
+  '#94A3B8', '#0F2A4A',
+]);
+
+export const sanitizeColor = (color: string): string => {
+  if (VALID_COLORS.has(color)) return color;
+  if (/^#[0-9A-Fa-f]{6}$/.test(color)) return color;
+  return '#94A3B8';
+};

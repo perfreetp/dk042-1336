@@ -25,7 +25,9 @@ export default function Alerts() {
     }
   };
 
-  const maxDuration = pendingAlerts.length > 0 ? Math.max(...pendingAlerts.map((a) => a.duration || 0)) : 0;
+  const maxDuration = pendingAlerts.length > 0
+    ? Math.max(...pendingAlerts.map((a) => a.duration ?? 0))
+    : 0;
 
   return (
     <AppLayout title="路线偏离提醒">

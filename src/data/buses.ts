@@ -61,15 +61,21 @@ const routes: Route[] = [
 const generateStudents = (busId: string, count: number, gradeBase: number): Student[] => {
   const names = ['张伟', '李娜', '王芳', '刘洋', '陈静', '杨帆', '赵磊', '黄敏', '周涛', '吴婷',
     '徐强', '孙丽', '马超', '朱琳', '胡军', '郭燕', '林峰', '何雪', '罗宇', '梁佳'];
-  return Array.from({ length: count }, (_, i) => ({
-    id: `stu-${busId}-${i + 1}`,
-    name: names[i % names.length] + (i >= names.length ? (i - names.length + 1) : ''),
-    grade: `${gradeBase + Math.floor(i / 8)}年级`,
-    className: `${(i % 4) + 1}班`,
-    isOnBoard: i < Math.floor(count * 0.7),
-    busId,
-    boardTime: i < Math.floor(count * 0.7) ? `07:${String(5 + i * 2).padStart(2, '0')}` : undefined,
-  }));
+  const onBoardCount = Math.floor(count * 0.7);
+  return Array.from({ length: count }, (_, i) => {
+    const isOnBoard = i < onBoardCount;
+    const minutes = 5 + i * 2;
+    const clampedMinutes = Math.min(minutes, 59);
+    return {
+      id: `stu-${busId}-${i + 1}`,
+      name: names[i % names.length] + (i >= names.length ? String(i - names.length + 1) : ''),
+      grade: `${gradeBase + Math.floor(i / 8)}年级`,
+      className: `${(i % 4) + 1}班`,
+      isOnBoard,
+      busId,
+      boardTime: isOnBoard ? `07:${String(clampedMinutes).padStart(2, '0')}` : undefined,
+    };
+  });
 };
 
 export const mockBuses: Bus[] = [
@@ -152,7 +158,7 @@ export const mockBuses: Bus[] = [
     status: 'offline',
     riskLevel: 'high',
     location: { lat: 39.95, lng: 116.55, x: 82, y: 28 },
-    students: generateStudents('bus5', 38, 5),
+    students: generateStudents('bus5', 38, 5).map((s) => ({ ...s, isOnBoard: false, boardTime: undefined })),
     isDeviating: false,
     lastUpdate: '15分钟前',
     speed: 0,

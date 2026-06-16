@@ -1,7 +1,7 @@
 import { useShallow } from 'zustand/react/shallow';
 import { Bus, User, Users, MapPin, Clock, Gauge } from 'lucide-react';
 import type { Bus as BusType } from '@/types';
-import { cn, getRiskLevelLabel, getRiskLevelColor } from '@/utils/format';
+import { cn, getRiskLevelLabel, getRiskLevelColor, sanitizeColor } from '@/utils/format';
 import { useBusStore } from '@/store/busStore';
 
 interface BusCardProps {
@@ -37,13 +37,13 @@ export default function BusCard({ bus }: BusCardProps) {
         <div className="flex items-center gap-2">
           <div
             className="w-9 h-9 rounded-lg flex items-center justify-center"
-            style={{ backgroundColor: bus.route.color + '20' }}
+            style={{ backgroundColor: sanitizeColor(bus.route.color) + '20' }}
           >
-            <Bus size={18} style={{ color: bus.route.color }} />
+            <Bus size={18} style={{ color: sanitizeColor(bus.route.color) }} />
           </div>
           <div>
             <p className="font-bold text-navy-800 font-mono">{bus.plateNumber}</p>
-            <p className="text-xs text-slate-500" style={{ color: bus.route.color }}>
+            <p className="text-xs text-slate-500" style={{ color: sanitizeColor(bus.route.color) }}>
               {bus.route.name}
             </p>
           </div>

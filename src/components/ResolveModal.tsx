@@ -75,6 +75,7 @@ export default function ResolveModal({ alertId, onClose, onResolve }: ResolveMod
             <input
               type="text"
               value={handler}
+              maxLength={50}
               onChange={(e) => {
                 setHandler(e.target.value);
                 if (errors.handler) setErrors({ ...errors, handler: undefined });
@@ -99,6 +100,7 @@ export default function ResolveModal({ alertId, onClose, onResolve }: ResolveMod
             </label>
             <textarea
               value={resolution}
+              maxLength={500}
               onChange={(e) => {
                 setResolution(e.target.value);
                 if (errors.resolution) setErrors({ ...errors, resolution: undefined });

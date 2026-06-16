@@ -1,6 +1,7 @@
 import { useShallow } from 'zustand/react/shallow';
 import { useBusStore } from '@/store/busStore';
-import { cn } from '@/utils/format';
+import { cn, sanitizeColor } from '@/utils/format';
+import type { Bus } from '@/types';
 
 export default function BusMap() {
   const { buses, selectedBusId, setSelectedBus } = useBusStore(
@@ -11,7 +12,7 @@ export default function BusMap() {
     }))
   );
 
-  const getBusColor = (bus: any) => {
+  const getBusColor = (bus: Bus): string => {
     if (bus.status === 'offline') return '#94A3B8';
     if (bus.isDeviating) return '#E63946';
     if (bus.riskLevel === 'high') return '#E63946';
@@ -104,7 +105,7 @@ export default function BusMap() {
         </svg>
 
         {buses.map((bus) => {
-          const color = getBusColor(bus);
+          const color = sanitizeColor(getBusColor(bus));
           const isSelected = selectedBusId === bus.id;
           return (
             <div

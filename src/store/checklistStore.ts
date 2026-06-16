@@ -15,7 +15,9 @@ export const useChecklistStore = create<ChecklistStore>((set) => ({
   toggleDriverConfirm: (busId) =>
     set((state) => ({
       items: state.items.map((item) =>
-        item.busId === busId ? { ...item, isDriverConfirmed: !item.isDriverConfirmed } : item
+        item.busId === busId && !item.isDriverConfirmed
+          ? { ...item, isDriverConfirmed: true }
+          : item
       ),
     })),
 
@@ -42,6 +44,7 @@ export const useUnfinishedItems = () =>
 export const useCompletionRate = () =>
   useChecklistStore((s) => {
     const total = s.items.length * 3;
+    if (total === 0) return 0;
     const completed = s.items.reduce(
       (sum, item) =>
         sum +

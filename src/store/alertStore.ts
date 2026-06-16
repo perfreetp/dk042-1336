@@ -12,13 +12,17 @@ export const useAlertStore = create<AlertStore>((set) => ({
   alerts: mockAlerts,
 
   resolveAlert: (id, handler, resolution) =>
-    set((state) => ({
-      alerts: state.alerts.map((a) =>
-        a.id === id
-          ? { ...a, status: 'resolved', handler, resolution, resolvedAt: new Date() }
-          : a
-      ),
-    })),
+    set((state) => {
+      const target = state.alerts.find((a) => a.id === id);
+      if (!target || target.status === 'resolved') return state;
+      return {
+        alerts: state.alerts.map((a) =>
+          a.id === id
+            ? { ...a, status: 'resolved', handler, resolution, resolvedAt: new Date() }
+            : a
+        ),
+      };
+    }),
 }));
 
 export const usePendingAlertCount = () =>

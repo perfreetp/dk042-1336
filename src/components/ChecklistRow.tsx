@@ -70,7 +70,7 @@ export default function ChecklistRow({ item, onToggleConfirm }: ChecklistRowProp
           <p className="font-mono font-semibold text-navy-800">{item.plateNumber}</p>
           <div className="flex items-center gap-1.5 mt-0.5">
             <div className="w-5 h-5 rounded-full bg-navy-100 flex items-center justify-center text-[10px] font-bold text-navy-700">
-              {item.driverName[0]}
+              {item.driverName?.[0] || '?'}
             </div>
             <span className="text-xs text-slate-500">{item.driverName}</span>
           </div>

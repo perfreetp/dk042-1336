@@ -12,7 +12,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { useSelectedBus, useBusStore } from '@/store/busStore';
-import { cn } from '@/utils/format';
+import { cn, sanitizeColor } from '@/utils/format';
 
 export default function BusDetailDrawer() {
   const bus = useSelectedBus();
@@ -32,21 +32,21 @@ export default function BusDetailDrawer() {
       <div className="fixed right-0 top-0 bottom-0 w-[480px] bg-white z-50 shadow-2xl animate-slideInRight flex flex-col">
         <div
           className="p-5 border-b border-slate-200"
-          style={{ borderLeft: `4px solid ${bus.route.color}` }}
+          style={{ borderLeft: `4px solid ${sanitizeColor(bus.route.color)}` }}
         >
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
               <div
                 className="w-12 h-12 rounded-xl flex items-center justify-center"
-                style={{ backgroundColor: bus.route.color + '20' }}
+                style={{ backgroundColor: sanitizeColor(bus.route.color) + '20' }}
               >
-                <BusIcon size={24} style={{ color: bus.route.color }} />
+                <BusIcon size={24} style={{ color: sanitizeColor(bus.route.color) }} />
               </div>
               <div>
                 <h3 className="text-xl font-bold text-navy-800 font-mono">
                   {bus.plateNumber}
                 </h3>
-                <p className="text-sm" style={{ color: bus.route.color }}>
+                <p className="text-sm" style={{ color: sanitizeColor(bus.route.color) }}>
                   {bus.route.name}
                 </p>
               </div>
@@ -178,7 +178,7 @@ export default function BusDetailDrawer() {
               <div className="bg-slate-50 rounded-xl p-4">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-full bg-alert-green/10 flex items-center justify-center text-base font-bold text-alert-green">
-                    {bus.attendant.name[0]}
+                    {bus.attendant.name?.[0] || '?'}
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-navy-800">

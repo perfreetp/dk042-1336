@@ -1,4 +1,3 @@
-import { shallow } from 'zustand/shallow';
 import AppLayout from '@/components/Layout/AppLayout';
 import StatCard from '@/components/StatCard';
 import FilterBar from '@/components/FilterBar';
