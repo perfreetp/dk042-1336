@@ -32,7 +32,9 @@ export const useBusStats = () =>
   useBusStore(
     useShallow((s) => ({
       onlineCount: s.buses.filter((b) => b.status === 'online').length,
-      totalPassengers: s.buses.reduce((sum, b) => sum + b.currentPassengers, 0),
+      totalPassengers: s.buses.reduce(
+        (sum, b) => sum + b.students.filter((st) => st.isOnBoard).length, 0
+      ),
       alertCount: s.buses.filter((b) => b.isDeviating).length,
       highRiskCount: s.buses.filter((b) => b.riskLevel === 'high').length,
     }))

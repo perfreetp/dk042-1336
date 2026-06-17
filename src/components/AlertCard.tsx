@@ -9,16 +9,20 @@ import {
   NavigationOff,
   Pause,
   Ban,
+  PhoneCall,
 } from 'lucide-react';
 import type { Alert } from '@/types';
-import { cn, getAlertTypeLabel, getAlertTypeColor, formatDateTime, formatTime } from '@/utils/format';
+import { cn, getAlertTypeLabel, getAlertTypeColor, formatDateTime } from '@/utils/format';
+import { useAlertStore } from '@/store/alertStore';
+import { useBusStore } from '@/store/busStore';
+import type { LucideIcon } from 'lucide-react';
 
 interface AlertCardProps {
   alert: Alert;
   onResolve: () => void;
 }
 
-const typeIcons = {
+const typeIcons: Record<string, LucideIcon> = {
   deviation: NavigationOff,
   stop: Pause,
   restricted: Ban,
@@ -27,6 +31,19 @@ const typeIcons = {
 export default function AlertCard({ alert, onResolve }: AlertCardProps) {
   const TypeIcon = typeIcons[alert.type] || AlertTriangle;
   const isPending = alert.status === 'pending';
+  const markDriverContacted = useAlertStore((s) => s.markDriverContacted);
+  const driverPhone = useBusStore((s) => {
+    const bus = s.buses.find((b) => b.id === alert.busId);
+    return bus?.driver.phone;
+  });
+  const isContacted = !!alert.driverContactedAt;
+
+  const handleCallDriver = () => {
+    markDriverContacted(alert.id);
+    if (driverPhone) {
+      window.open(`tel:${driverPhone.replace(/\*/g, '0')}`, '_self');
+    }
+  };
 
   return (
     <div
@@ -61,7 +78,7 @@ export default function AlertCard({ alert, onResolve }: AlertCardProps) {
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between gap-4">
               <div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-wrap">
                   <h4 className="text-lg font-bold text-navy-800 font-mono">
                     {alert.busPlateNumber}
                   </h4>
@@ -77,6 +94,12 @@ export default function AlertCard({ alert, onResolve }: AlertCardProps) {
                     <span className="text-xs px-2.5 py-1 rounded-md bg-alert-green/10 text-alert-green font-medium flex items-center gap-1">
                       <CheckCircle2 size={12} />
                       已处理
+                    </span>
+                  )}
+                  {isContacted && (
+                    <span className="text-xs px-2.5 py-1 rounded-md bg-navy-100 text-navy-700 font-medium flex items-center gap-1">
+                      <PhoneCall size={12} />
+                      已联系司机
                     </span>
                   )}
                 </div>
@@ -127,9 +150,20 @@ export default function AlertCard({ alert, onResolve }: AlertCardProps) {
 
         {isPending && (
           <div className="flex items-center gap-3 mt-4 pt-4 border-t border-slate-100">
-            <button className="flex items-center gap-1.5 px-4 py-2 bg-navy-800 hover:bg-navy-700 text-white rounded-lg text-sm font-medium transition-colors">
+            <button
+              onClick={handleCallDriver}
+              className={cn(
+                'flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+                isContacted
+                  ? 'bg-navy-100 text-navy-700 hover:bg-navy-200'
+                  : 'bg-navy-800 hover:bg-navy-700 text-white'
+              )}
+            >
               <Phone size={16} />
-              联系司机
+              {isContacted ? '再次联系司机' : '联系司机'}
+              {driverPhone && (
+                <span className="text-xs opacity-70 ml-1">{driverPhone}</span>
+              )}
             </button>
             <button className="flex items-center gap-1.5 px-4 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-lg text-sm font-medium transition-colors">
               <MessageSquare size={16} />

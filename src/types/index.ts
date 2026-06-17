@@ -73,6 +73,7 @@ export interface Alert {
   resolution?: string;
   resolvedAt?: Date;
   duration?: number;
+  driverContactedAt?: string;
 }
 
 export interface ChecklistItem {

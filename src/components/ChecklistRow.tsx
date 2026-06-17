@@ -111,10 +111,13 @@ export default function ChecklistRow({ item, onToggleConfirm }: ChecklistRowProp
       </div>
 
       <div className="col-span-2 flex items-center justify-center gap-2">
-        <button className="flex items-center gap-1 px-3 py-1.5 text-xs text-navy-600 hover:bg-navy-50 rounded-md transition-colors border border-slate-200">
+        <a
+          href={`tel:${item.driverPhone.replace(/\*/g, '0')}`}
+          className="flex items-center gap-1 px-3 py-1.5 text-xs text-navy-600 hover:bg-navy-50 rounded-md transition-colors border border-slate-200"
+        >
           <Phone size={12} />
           联系司机
-        </button>
+        </a>
       </div>
     </div>
   );

@@ -16,6 +16,7 @@ export default function BusCard({ bus }: BusCardProps) {
     }))
   );
   const isSelected = selectedBusId === bus.id;
+  const onBoardCount = bus.students.filter((s) => s.isOnBoard).length;
 
   const borderColor =
     bus.riskLevel === 'high'
@@ -82,7 +83,7 @@ export default function BusCard({ bus }: BusCardProps) {
           <div className="flex items-center gap-1 text-sm">
             <Users size={14} className="text-alert-green" />
             <span className="font-mono font-bold text-navy-800">
-              {bus.currentPassengers}
+              {onBoardCount}
             </span>
             <span className="text-slate-400">/ {bus.capacity} 人</span>
           </div>

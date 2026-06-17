@@ -63,7 +63,7 @@ export default function BusDetailDrawer() {
             <div className="bg-slate-50 rounded-lg p-3 text-center">
               <p className="text-xs text-slate-500">车内人数</p>
               <p className="text-lg font-bold text-navy-800 font-mono mt-1">
-                {bus.currentPassengers}
+                {onBoardStudents.length}
                 <span className="text-sm font-normal text-slate-400">/{bus.capacity}</span>
               </p>
             </div>
@@ -170,10 +170,14 @@ export default function BusDetailDrawer() {
                     <p className="text-xs text-slate-400">司机</p>
                   </div>
                 </div>
-                <button className="mt-3 w-full flex items-center justify-center gap-1.5 py-2 bg-white rounded-lg text-sm text-navy-600 hover:bg-navy-50 border border-slate-200 transition-colors">
+                <a
+                  href={`tel:${bus.driver.phone.replace(/\*/g, '0')}`}
+                  className="mt-3 w-full flex items-center justify-center gap-1.5 py-2 bg-white rounded-lg text-sm text-navy-600 hover:bg-navy-50 border border-slate-200 transition-colors"
+                >
                   <Phone size={14} />
                   联系司机
-                </button>
+                  <span className="text-xs text-slate-400">{bus.driver.phone}</span>
+                </a>
               </div>
               <div className="bg-slate-50 rounded-xl p-4">
                 <div className="flex items-center gap-3">
@@ -187,10 +191,14 @@ export default function BusDetailDrawer() {
                     <p className="text-xs text-slate-400">随车照管员</p>
                   </div>
                 </div>
-                <button className="mt-3 w-full flex items-center justify-center gap-1.5 py-2 bg-white rounded-lg text-sm text-navy-600 hover:bg-navy-50 border border-slate-200 transition-colors">
+                <a
+                  href={`tel:${bus.attendant.phone.replace(/\*/g, '0')}`}
+                  className="mt-3 w-full flex items-center justify-center gap-1.5 py-2 bg-white rounded-lg text-sm text-navy-600 hover:bg-navy-50 border border-slate-200 transition-colors"
+                >
                   <Phone size={14} />
                   联系照管
-                </button>
+                  <span className="text-xs text-slate-400">{bus.attendant.phone}</span>
+                </a>
               </div>
             </div>
           </section>

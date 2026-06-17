@@ -3,6 +3,27 @@ import { useShallow } from 'zustand/react/shallow';
 import type { ChecklistItem } from '@/types';
 import { mockChecklist } from '@/data/checklist';
 
+const STORAGE_KEY = 'bus-escort-checklist';
+
+function loadItems(): ChecklistItem[] {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  } catch {
+    localStorage.removeItem(STORAGE_KEY);
+  }
+  return mockChecklist;
+}
+
+function saveItems(items: ChecklistItem[]) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  } catch {}
+}
+
 interface ChecklistStore {
   items: ChecklistItem[];
   toggleDriverConfirm: (busId: string) => void;
@@ -10,25 +31,29 @@ interface ChecklistStore {
 }
 
 export const useChecklistStore = create<ChecklistStore>((set) => ({
-  items: mockChecklist,
+  items: loadItems(),
 
   toggleDriverConfirm: (busId) =>
-    set((state) => ({
-      items: state.items.map((item) =>
+    set((state) => {
+      const newItems = state.items.map((item) =>
         item.busId === busId && !item.isDriverConfirmed
           ? { ...item, isDriverConfirmed: true }
           : item
-      ),
-    })),
+      );
+      saveItems(newItems);
+      return { items: newItems };
+    }),
 
   refreshCheck: () => {
-    set((state) => ({
-      items: state.items.map((item) => ({
+    set((state) => {
+      const newItems = state.items.map((item) => ({
         ...item,
         isOnline: true,
         isGpsNormal: true,
-      })),
-    }));
+      }));
+      saveItems(newItems);
+      return { items: newItems };
+    });
   },
 }));
 
